@@ -1,0 +1,47 @@
+version: 2.0
+jobs:
+  build:
+    working_directory: ~/kuneiform
+    docker:
+      - image: fpco/stack-build:latest
+
+    steps:
+      - checkout
+      - run: grep '^resolver:' stack.yaml > resolver.txt
+
+      - restore_cache:
+          keys:
+            - dot-stack-{{ checksum "stack.yaml" }}-{{ checksum "kuneiform.cabal" }}
+            - dot-stack-{{ checksum "stack.yaml" }}
+            - dot-stack-{{ checksum "resolver.txt" }}
+            - dot-stack-resolver-{{ checksum "resolver.txt" }}
+      - run: stack setup
+      - save_cache:
+          key: dot-stack-resolver-{{ checksum "resolver.txt" }}
+          paths:
+            - ~/.stack
+      - save_cache:
+          key: dot-stack-setup-{{ checksum "stack.yaml" }}
+          paths:
+            - ~/.stack
+
+      - run: stack build --test --no-run-tests --dependencies-only
+      - save_cache:
+          key: dot-stack-{{ checksum "resolver.txt" }}
+          paths:
+            - ~/.stack
+
+      - restore_cache:
+          key: stack-work-{{ checksum "stack.yaml" }}
+      - run: stack build --test --no-run-tests
+      - save_cache:
+          key: dot-stack-{{ checksum "stack.yaml" }}-{{ checksum "kuneiform.cabal" }}
+          paths:
+            - ~/.stack
+      - save_cache:
+          key: stack-work-{{ checksum "stack.yaml" }}
+          paths: ~/kuneiform/.stack-work
+
+      - run:
+          name: Running unit tests
+          command: stack test
