@@ -9,6 +9,12 @@ newtype Bucket = Bucket
   { name :: String
   } deriving (Eq, Show)
 
+newPodBucket :: IO Bucket
+newPodBucket = do
+  return Bucket
+    { name = "hello"
+    }
+
 instance Pod Bucket where
   type PodIn Bucket = ()
   type PodOut Bucket = ()
