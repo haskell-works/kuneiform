@@ -30,9 +30,8 @@ library
   exposed-modules:
       Kuneiform
   other-modules:
-      Kuneiform.Modules.Moo
-      Kuneiform.Resource
-      Kuneiform.Resources.Bucket
+      Kuneiform.Pod
+      Kuneiform.Pods.Bucket
       Paths_kuneiform
   default-language: Haskell2010
 
