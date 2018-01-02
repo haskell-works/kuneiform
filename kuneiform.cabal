@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a2e25ea46583d160aa8cadf82ed9415c6b85e628b7a653c3de45f70e3f42bb1f
+-- hash: 785d2cb4d8bb8261d9f0a1f3b6fba90731bb8ecbdacae63b50657af78a620608
 
 name:           kuneiform
 version:        0.1.0.0
@@ -29,9 +29,12 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , lens
+    , optparse-applicative
   exposed-modules:
       Kuneiform
   other-modules:
+      Kuneiform.Option.Cmd.Help
       Kuneiform.Pod
       Kuneiform.Pods.Bucket
       Kuneiform.Pods.KafkaTopic

@@ -17,6 +17,8 @@ library:
   - Kuneiform
   dependencies:
   - base >=4.7 && <5
+  - lens
+  - optparse-applicative
 
 executables:
   kuneiform-exe:
