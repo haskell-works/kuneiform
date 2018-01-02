@@ -1,6 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.17.1.
+-- This file has been generated from package.yaml by hpack version 0.20.0.
 --
 -- see: https://github.com/sol/hpack
+--
+-- hash: a2e25ea46583d160aa8cadf82ed9415c6b85e628b7a653c3de45f70e3f42bb1f
 
 name:           kuneiform
 version:        0.1.0.0
@@ -44,6 +46,8 @@ executable kuneiform-exe
   build-depends:
       base
     , kuneiform
+  other-modules:
+      Paths_kuneiform
   default-language: Haskell2010
 
 test-suite kuneiform-test
@@ -56,4 +60,6 @@ test-suite kuneiform-test
       base
     , hspec
     , kuneiform
+  other-modules:
+      Paths_kuneiform
   default-language: Haskell2010
