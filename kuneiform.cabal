@@ -2,22 +2,23 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 995042d77d5ae75f25629427287a36dc796895ddb2f933655ac67705ef9c8161
+-- hash: a9488280b4303e5159fa930ed2bffdeea07abbe64b5ee240e9180ce0881f01a1
 
 name:           kuneiform
 version:        0.1.0.0
-category:       Web
+description:    Please see the README on Github at <https://github.com/githubuser/kuneiform#readme>
 homepage:       https://github.com/githubuser/kuneiform#readme
 bug-reports:    https://github.com/githubuser/kuneiform/issues
 author:         Author name here
 maintainer:     example@example.com
-copyright:      2017 Author name here
+copyright:      2018 Author name here
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10
 
 extra-source-files:
+    ChangeLog.md
     README.md
 
 source-repository head
@@ -33,12 +34,14 @@ library
     , optparse-applicative
   exposed-modules:
       Kuneiform
-  other-modules:
+      Kuneiform.Action.Help
+      Kuneiform.Option
       Kuneiform.Option.Cmd
       Kuneiform.Option.Cmd.Help
       Kuneiform.Pod
       Kuneiform.Pods.Bucket
       Kuneiform.Pods.KafkaTopic
+  other-modules:
       Paths_kuneiform
   default-language: Haskell2010
 
@@ -48,8 +51,11 @@ executable kuneiform-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base
+      base >=4.7 && <5
+    , gitrev
     , kuneiform
+    , lens
+    , optparse-applicative
   other-modules:
       Paths_kuneiform
   default-language: Haskell2010
@@ -61,9 +67,10 @@ test-suite kuneiform-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base
-    , hspec
+      base >=4.7 && <5
     , kuneiform
+    , lens
+    , optparse-applicative
   other-modules:
       Paths_kuneiform
   default-language: Haskell2010

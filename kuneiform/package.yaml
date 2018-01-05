@@ -21,8 +21,6 @@ description:         Please see the README on Github at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
-- lens
-- optparse-applicative
 
 library:
   source-dirs: src
@@ -36,8 +34,7 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-     - gitrev
-     - kuneiform
+    - kuneiform
 
 tests:
   kuneiform-test:
