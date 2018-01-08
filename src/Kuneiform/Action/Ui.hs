@@ -20,24 +20,26 @@ import qualified Brick.Widgets.List   as L
 import qualified Data.Vector          as Vec
 import qualified Graphics.Vty         as V
 
-drawUI :: Show a => L.List () a -> [Widget ()]
+drawUI :: Show a => L.List Name a -> [Widget Name]
 drawUI l = [ui]
   where label = str "Item " <+> cur <+> str " of " <+> total
         cur = case l ^. L.listSelectedL of
                 Nothing -> str "-"
                 Just i  -> str (show (i + 1))
         total = str $ show $ Vec.length $ l ^. L.listElementsL
+        box :: Widget Name
         box = B.borderWithLabel label $
               hLimit 25 $
               vLimit 15 $
               L.renderList listDrawElement True l
+        ui :: Widget Name
         ui = C.vCenter $ vBox [ C.hCenter box
                               , str " "
                               , C.hCenter $ str "Press +/- to add/remove list elements."
                               , C.hCenter $ str "Press Esc to exit."
                               ]
 
-appEvent :: L.List () Char -> T.BrickEvent () e -> T.EventM () (T.Next (L.List () Char))
+appEvent :: L.List Name Char -> T.BrickEvent Name e -> T.EventM Name (T.Next (L.List Name Char))
 appEvent l (T.VtyEvent e) =
   case e of
     V.EvKey (V.KChar '+') [] ->
@@ -55,15 +57,15 @@ appEvent l (T.VtyEvent e) =
     nextElement v = fromMaybe '?' $ Vec.find (`Vec.notElem` v) (Vec.fromList ['a' .. 'z'])
 appEvent l _ = M.continue l
 
-listDrawElement :: (Show a) => Bool -> a -> Widget ()
+listDrawElement :: Show a => Bool -> a -> Widget Name
 listDrawElement sel a =
   let selStr s = if sel
                  then withAttr customAttr (str $ "<" <> s <> ">")
                  else str s
   in C.hCenter (str "Item " <+> selStr (show a))
 
-initialState :: L.List () Char
-initialState = L.list () (Vec.fromList ['a','b','c']) 1
+initialState :: L.List Name Char
+initialState = L.list View (Vec.fromList ['a','b','c']) 1
 
 customAttr :: A.AttrName
 customAttr = L.listSelectedAttr <> "custom"
@@ -75,7 +77,9 @@ theMap = A.attrMap V.defAttr
   , (customAttr         , fg V.cyan)
   ]
 
-theApp :: M.App (L.List () Char) e ()
+data Name = View deriving (Eq, Ord, Show)
+
+theApp :: M.App (L.List Name Char) e Name
 theApp = M.App
   { M.appDraw         = drawUI
   , M.appChooseCursor = M.showFirstCursor
