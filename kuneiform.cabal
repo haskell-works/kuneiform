@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2a6a094d47cc00e8dc6e92eb99562f5838cd86068b3259f160c336e71b467202
+-- hash: 2488140b83cbc540a0be04c17f988b4a232c3138ed21062687e9e4e2f659bf32
 
 name:           kuneiform
 version:        0.1.0.0
@@ -30,16 +30,23 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , brick
     , lens
+    , microlens
     , optparse-applicative
+    , vector
+    , vty
+    , word-wrap
   exposed-modules:
       Kuneiform
       Kuneiform.Action.Help
       Kuneiform.Action.Touch
+      Kuneiform.Action.Ui
       Kuneiform.Option
       Kuneiform.Option.Cmd
       Kuneiform.Option.Cmd.Help
       Kuneiform.Option.Cmd.Touch
+      Kuneiform.Option.Cmd.Ui
       Kuneiform.Pod
       Kuneiform.Pods.Bucket
       Kuneiform.Pods.KafkaTopic
@@ -54,10 +61,15 @@ executable kuneiform-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , brick
     , gitrev
     , kuneiform
     , lens
+    , microlens
     , optparse-applicative
+    , vector
+    , vty
+    , word-wrap
   other-modules:
       Paths_kuneiform
   default-language: Haskell2010
@@ -70,9 +82,15 @@ test-suite kuneiform-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , brick
+    , hspec
     , kuneiform
     , lens
+    , microlens
     , optparse-applicative
+    , vector
+    , vty
+    , word-wrap
   other-modules:
       Paths_kuneiform
   default-language: Haskell2010

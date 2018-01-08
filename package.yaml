@@ -21,8 +21,13 @@ description:         Please see the README on Github at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- brick
 - lens
+- microlens
 - optparse-applicative
+- vector
+- vty
+- word-wrap
 
 library:
   source-dirs: src
@@ -49,3 +54,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - kuneiform
+    - hspec
