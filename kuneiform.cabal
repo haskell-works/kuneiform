@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a9488280b4303e5159fa930ed2bffdeea07abbe64b5ee240e9180ce0881f01a1
+-- hash: 2a6a094d47cc00e8dc6e92eb99562f5838cd86068b3259f160c336e71b467202
 
 name:           kuneiform
 version:        0.1.0.0
@@ -35,9 +35,11 @@ library
   exposed-modules:
       Kuneiform
       Kuneiform.Action.Help
+      Kuneiform.Action.Touch
       Kuneiform.Option
       Kuneiform.Option.Cmd
       Kuneiform.Option.Cmd.Help
+      Kuneiform.Option.Cmd.Touch
       Kuneiform.Pod
       Kuneiform.Pods.Bucket
       Kuneiform.Pods.KafkaTopic
