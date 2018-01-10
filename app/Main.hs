@@ -10,6 +10,7 @@ import Data.Monoid
 import Data.Version
 import Development.GitRev
 import Kuneiform.Action.Help
+import Kuneiform.Action.Sqs
 import Kuneiform.Action.Touch
 import Kuneiform.Action.Ui
 import Kuneiform.Option
@@ -26,6 +27,7 @@ main :: IO ()
 main = do
   options <- O.execParser (O.optionsParser version $(gitHash))
   case options ^. goptCmd of
-    CmdOfCmdHelp        cmd -> actionHelp       cmd
-    CmdOfCmdTouch       cmd -> actionTouch      cmd
-    CmdOfCmdUi          cmd -> actionUi         cmd
+    CmdOfCmdHelp        params -> actionHelp       params
+    CmdOfCmdSqs         params -> actionSqs        params
+    CmdOfCmdTouch       params -> actionTouch      params
+    CmdOfCmdUi          params -> actionUi         params
