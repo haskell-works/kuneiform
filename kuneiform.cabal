@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5f3a038fb1f9e27e5e2e03fe95e0b956f8d62887143bb200823628d5530e3697
+-- hash: a895f63cf112ea01d7cd90dff52ced6b6c20adbc86e5e6577b90ad086306935e
 
 name:           kuneiform
 version:        0.1.0.0
@@ -39,9 +39,11 @@ library
     , amazonka-sqs
     , base >=4.7 && <5
     , brick
+    , conduit
     , lens
     , microlens
     , optparse-applicative
+    , text
     , vector
     , vty
     , word-wrap
@@ -52,6 +54,7 @@ library
       Kuneiform.Action.Sqs.ToKinesis
       Kuneiform.Action.Touch
       Kuneiform.Action.Ui
+      Kuneiform.Aws.Core
       Kuneiform.Option
       Kuneiform.Option.Cmd
       Kuneiform.Option.Cmd.Help
@@ -83,11 +86,13 @@ executable kuneiform-exe
     , amazonka-sqs
     , base >=4.7 && <5
     , brick
+    , conduit
     , gitrev
     , kuneiform
     , lens
     , microlens
     , optparse-applicative
+    , text
     , vector
     , vty
     , word-wrap
@@ -112,11 +117,13 @@ test-suite kuneiform-test
     , amazonka-sqs
     , base >=4.7 && <5
     , brick
+    , conduit
     , hspec
     , kuneiform
     , lens
     , microlens
     , optparse-applicative
+    , text
     , vector
     , vty
     , word-wrap

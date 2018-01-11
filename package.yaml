@@ -30,9 +30,11 @@ dependencies:
 - amazonka-sns
 - amazonka-sqs
 - brick
+- conduit
 - lens
 - microlens
 - optparse-applicative
+- text
 - vector
 - vty
 - word-wrap
