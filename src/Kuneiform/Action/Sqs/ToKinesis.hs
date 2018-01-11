@@ -4,6 +4,7 @@ module Kuneiform.Action.Sqs.ToKinesis where
 
 import Control.Lens
 import Control.Monad.IO.Class
+import Control.Monad.Trans.AWS            hiding (await)
 import Data.Conduit
 import Data.Monoid
 import Data.Text
