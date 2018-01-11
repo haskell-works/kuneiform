@@ -2,9 +2,9 @@ name:                kuneiform
 version:             0.1.0.0
 github:              "githubuser/kuneiform"
 license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2018 Author name here"
+author:              "John Ky"
+maintainer:          "newhoggy@gmail.com"
+copyright:           "2018 John Ky"
 
 extra-source-files:
 - README.md
@@ -30,14 +30,15 @@ dependencies:
 - amazonka-sns
 - amazonka-sqs
 - brick
+- bytestring
 - conduit
+- conduit-combinators
 - lens
 - microlens
 - optparse-applicative
 - text
 - vector
 - vty
-- word-wrap
 
 library:
   source-dirs: src

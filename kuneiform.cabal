@@ -2,16 +2,16 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0ca2fae57c8834e2c780e5057c6c4aae3ffb039408f888754c1e305cd7bde6ac
+-- hash: f7eeaccdcb104b3f4a159bce64bc6c8223184a2a9873e9463b1a0945d17b79ea
 
 name:           kuneiform
 version:        0.1.0.0
 description:    Please see the README on Github at <https://github.com/githubuser/kuneiform#readme>
 homepage:       https://github.com/githubuser/kuneiform#readme
 bug-reports:    https://github.com/githubuser/kuneiform/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2018 Author name here
+author:         John Ky
+maintainer:     newhoggy@gmail.com
+copyright:      2018 John Ky
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -39,14 +39,15 @@ library
     , amazonka-sqs
     , base >=4.7 && <5
     , brick
+    , bytestring
     , conduit
+    , conduit-combinators
     , lens
     , microlens
     , optparse-applicative
     , text
     , vector
     , vty
-    , word-wrap
   exposed-modules:
       Kuneiform
       Kuneiform.Action.Help
@@ -55,6 +56,7 @@ library
       Kuneiform.Action.Touch
       Kuneiform.Action.Ui
       Kuneiform.Aws.Core
+      Kuneiform.Aws.Kinesis
       Kuneiform.Conduit.Aws.Kinesis
       Kuneiform.Conduit.Aws.Sqs
       Kuneiform.Envelope
@@ -66,6 +68,7 @@ library
       Kuneiform.Option.Cmd.Sqs.ToKinesis
       Kuneiform.Option.Cmd.Touch
       Kuneiform.Option.Cmd.Ui
+      Kuneiform.Option.Parse
       Kuneiform.Pod
       Kuneiform.Pods.Bucket
       Kuneiform.Pods.KafkaTopic
@@ -89,7 +92,9 @@ executable kuneiform-exe
     , amazonka-sqs
     , base >=4.7 && <5
     , brick
+    , bytestring
     , conduit
+    , conduit-combinators
     , gitrev
     , kuneiform
     , lens
@@ -98,7 +103,6 @@ executable kuneiform-exe
     , text
     , vector
     , vty
-    , word-wrap
   other-modules:
       Paths_kuneiform
   default-language: Haskell2010
@@ -120,7 +124,9 @@ test-suite kuneiform-test
     , amazonka-sqs
     , base >=4.7 && <5
     , brick
+    , bytestring
     , conduit
+    , conduit-combinators
     , hspec
     , kuneiform
     , lens
@@ -129,7 +135,6 @@ test-suite kuneiform-test
     , text
     , vector
     , vty
-    , word-wrap
   other-modules:
       Paths_kuneiform
   default-language: Haskell2010
