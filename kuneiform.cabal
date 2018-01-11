@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b7dd1a15c7bda9f6eccc428006f3c6a885d0c601fb29e5001ee9429a01361453
+-- hash: 5f3a038fb1f9e27e5e2e03fe95e0b956f8d62887143bb200823628d5530e3697
 
 name:           kuneiform
 version:        0.1.0.0
@@ -29,7 +29,15 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      amazonka
+    , amazonka-core
+    , amazonka-dynamodb
+    , amazonka-dynamodb-streams
+    , amazonka-kinesis
+    , amazonka-s3
+    , amazonka-sns
+    , amazonka-sqs
+    , base >=4.7 && <5
     , brick
     , lens
     , microlens
@@ -65,7 +73,15 @@ executable kuneiform-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      amazonka
+    , amazonka-core
+    , amazonka-dynamodb
+    , amazonka-dynamodb-streams
+    , amazonka-kinesis
+    , amazonka-s3
+    , amazonka-sns
+    , amazonka-sqs
+    , base >=4.7 && <5
     , brick
     , gitrev
     , kuneiform
@@ -86,7 +102,15 @@ test-suite kuneiform-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      amazonka
+    , amazonka-core
+    , amazonka-dynamodb
+    , amazonka-dynamodb-streams
+    , amazonka-kinesis
+    , amazonka-s3
+    , amazonka-sns
+    , amazonka-sqs
+    , base >=4.7 && <5
     , brick
     , hspec
     , kuneiform

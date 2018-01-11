@@ -21,6 +21,14 @@ description:         Please see the README on Github at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- amazonka
+- amazonka-core
+- amazonka-dynamodb
+- amazonka-dynamodb-streams
+- amazonka-kinesis
+- amazonka-s3
+- amazonka-sns
+- amazonka-sqs
 - brick
 - lens
 - microlens
