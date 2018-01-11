@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 76d6a91455a1595c02d721b26d3f9ea1c243938a0af777270613038123649811
+-- hash: c95f457a04fcfd11e44d98d96d90d4e0309e93ff4a23fefab57a1faa5fb741ad
 
 name:           kuneiform
 version:        0.1.0.0
@@ -55,6 +55,7 @@ library
       Kuneiform.Action.Touch
       Kuneiform.Action.Ui
       Kuneiform.Aws.Core
+      Kuneiform.Conduit.Aws.Kinesis
       Kuneiform.Conduit.Aws.Sqs
       Kuneiform.Option
       Kuneiform.Option.Cmd
