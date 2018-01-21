@@ -33,6 +33,7 @@ dependencies:
 - bytestring
 - conduit
 - conduit-combinators
+- hw-conduit
 - lens
 - microlens
 - optparse-applicative

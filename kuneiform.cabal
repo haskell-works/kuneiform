@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f7eeaccdcb104b3f4a159bce64bc6c8223184a2a9873e9463b1a0945d17b79ea
+-- hash: b521ecba4c7c602a71ff02700c801ed1eb3d623102a32eda4f4b900cc53acc4d
 
 name:           kuneiform
 version:        0.1.0.0
@@ -42,6 +42,7 @@ library
     , bytestring
     , conduit
     , conduit-combinators
+    , hw-conduit
     , lens
     , microlens
     , optparse-applicative
@@ -96,6 +97,7 @@ executable kuneiform-exe
     , conduit
     , conduit-combinators
     , gitrev
+    , hw-conduit
     , kuneiform
     , lens
     , microlens
@@ -128,6 +130,7 @@ test-suite kuneiform-test
     , conduit
     , conduit-combinators
     , hspec
+    , hw-conduit
     , kuneiform
     , lens
     , microlens
