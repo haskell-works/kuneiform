@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b521ecba4c7c602a71ff02700c801ed1eb3d623102a32eda4f4b900cc53acc4d
+-- hash: de2c922d6bcafc1f90678bb4c8df81332270bac71a9d28d9f29e75803451fb59
 
 name:           kuneiform
 version:        0.1.0.0
@@ -42,9 +42,12 @@ library
     , bytestring
     , conduit
     , conduit-combinators
+    , fast-logger
+    , http-client
     , hw-conduit
     , lens
     , microlens
+    , monad-logger
     , optparse-applicative
     , text
     , vector
@@ -96,11 +99,14 @@ executable kuneiform-exe
     , bytestring
     , conduit
     , conduit-combinators
+    , fast-logger
     , gitrev
+    , http-client
     , hw-conduit
     , kuneiform
     , lens
     , microlens
+    , monad-logger
     , optparse-applicative
     , text
     , vector
@@ -129,11 +135,14 @@ test-suite kuneiform-test
     , bytestring
     , conduit
     , conduit-combinators
+    , fast-logger
     , hspec
+    , http-client
     , hw-conduit
     , kuneiform
     , lens
     , microlens
+    , monad-logger
     , optparse-applicative
     , text
     , vector
