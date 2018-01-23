@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: de2c922d6bcafc1f90678bb4c8df81332270bac71a9d28d9f29e75803451fb59
+-- hash: cef1161fa1179c36c8d61268a23d9a52a7016718311901f32928efdb016ca23c
 
 name:           kuneiform
 version:        0.1.0.0
@@ -49,6 +49,7 @@ library
     , microlens
     , monad-logger
     , optparse-applicative
+    , singletons
     , text
     , vector
     , vty
@@ -63,6 +64,7 @@ library
       Kuneiform.Aws.Kinesis
       Kuneiform.Conduit.Aws.Kinesis
       Kuneiform.Conduit.Aws.Sqs
+      Kuneiform.Engine
       Kuneiform.Envelope
       Kuneiform.Option
       Kuneiform.Option.Cmd
@@ -108,6 +110,7 @@ executable kuneiform-exe
     , microlens
     , monad-logger
     , optparse-applicative
+    , singletons
     , text
     , vector
     , vty
@@ -144,6 +147,7 @@ test-suite kuneiform-test
     , microlens
     , monad-logger
     , optparse-applicative
+    , singletons
     , text
     , vector
     , vty

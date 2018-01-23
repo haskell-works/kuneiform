@@ -40,6 +40,7 @@ dependencies:
 - microlens
 - monad-logger
 - optparse-applicative
+- singletons
 - text
 - vector
 - vty
