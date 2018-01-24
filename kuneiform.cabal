@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: cef1161fa1179c36c8d61268a23d9a52a7016718311901f32928efdb016ca23c
+-- hash: 57faa2313a4c44a0c68221bb445f8000dd4aee860abc233d365434d8d779a8fc
 
 name:           kuneiform
 version:        0.1.0.0
@@ -56,6 +56,9 @@ library
   exposed-modules:
       Kuneiform
       Kuneiform.Action.Help
+      Kuneiform.Action.S3
+      Kuneiform.Action.S3.Ls
+      Kuneiform.Action.S3.RemoveAll
       Kuneiform.Action.Sqs
       Kuneiform.Action.Sqs.ToKinesis
       Kuneiform.Action.Touch
@@ -63,12 +66,17 @@ library
       Kuneiform.Aws.Core
       Kuneiform.Aws.Kinesis
       Kuneiform.Conduit.Aws.Kinesis
+      Kuneiform.Conduit.Aws.S3
       Kuneiform.Conduit.Aws.Sqs
       Kuneiform.Engine
       Kuneiform.Envelope
       Kuneiform.Option
       Kuneiform.Option.Cmd
       Kuneiform.Option.Cmd.Help
+      Kuneiform.Option.Cmd.S3
+      Kuneiform.Option.Cmd.S3.Help
+      Kuneiform.Option.Cmd.S3.Ls
+      Kuneiform.Option.Cmd.S3.RemoveAll
       Kuneiform.Option.Cmd.Sqs
       Kuneiform.Option.Cmd.Sqs.Help
       Kuneiform.Option.Cmd.Sqs.ToKinesis
