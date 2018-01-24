@@ -17,21 +17,20 @@ actionS3Ls :: CmdS3Ls -> IO ()
 actionS3Ls opts = do
   let b = opts ^. s3LsBucket
   let p = opts ^. s3LsPrefix
-
-  putStrLn $ "Delimiter: " <> show (opts ^. s3LsDelimiter)
+  let r = opts ^. s3LsRecursive
 
   if opts ^. s3LsVersions
     then  let req = listObjectVersions (BucketName b)
                   & (lovMaxKeys   .~ Just 10000)
                   & (lovDelimiter .~ (opts ^. s3LsDelimiter))
                   & (lovPrefix    .~ (opts ^. s3LsPrefix))
-          in runConduit $ s3ListObjectVersionsC req
+          in runConduit $ s3ListObjectVersionsC r req
           .| effectC (\ov -> forM_ (ov ^. ovKey) print)
           .| sinkNull
     else  let req = listObjectsV (BucketName b)
                   & (lMaxKeys     .~ Just 10000)
                   & (lDelimiter   .~ (opts ^. s3LsDelimiter))
                   & (lPrefix      .~ (opts ^. s3LsPrefix))
-          in runConduit $ s3ListObjectsC req
+          in runConduit $ s3ListObjectsC r req
           .| effectC print
           .| sinkNull

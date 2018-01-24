@@ -11,8 +11,10 @@ import Data.Text              hiding (foldl1)
 import Kuneiform.Aws.Core
 import Network.AWS.S3
 
-s3ListObjectVersionsC :: MonadIO m => ListObjectVersions -> Source m ObjectVersion
-s3ListObjectVersionsC req = do
+{-# ANN module ("HLint: ignore Redundant do"  :: String) #-}
+
+s3ListObjectVersionsC :: MonadIO m => Bool -> ListObjectVersions -> Source m ObjectVersion
+s3ListObjectVersionsC recursive req = do
   resp <- liftIO $ sendAws req
   let nextVersionIdMarker = resp ^. lovrsNextVersionIdMarker  -- Use this value for the next version id marker parameter in a subsequent request.
   let keyMarker           = resp ^. lovrsKeyMarker            -- Marks the last Key returned in a truncated response.
@@ -29,19 +31,21 @@ s3ListObjectVersionsC req = do
   let delimiter           = resp ^. lovrsDelimiter            -- Undocumented member.
   let responseStatus      = resp ^. lovrsResponseStatus       -- The response status code.
 
-  forM_ (resp ^. lovrsCommonPrefixes) $ \commonPrefix ->
-    s3ListObjectVersionsC $ req
-      & (lovPrefix  .~  (commonPrefix ^. cpPrefix))
+  when recursive $ do
+    forM_ (resp ^. lovrsCommonPrefixes) $ \commonPrefix -> do
+      s3ListObjectVersionsC recursive $ req
+        & (lovPrefix  .~  (commonPrefix ^. cpPrefix))
 
   forM_ (resp ^. lovrsVersions ) yield
 
   forM_ (resp ^. lovrsIsTruncated) $ \isTruncated ->
-    when isTruncated $ s3ListObjectVersionsC $ req
-      & (lovKeyMarker       .~ (resp ^. lovrsNextKeyMarker))
-      & (lovVersionIdMarker .~ (resp ^. lovrsNextVersionIdMarker))
+    when isTruncated $ do
+      s3ListObjectVersionsC recursive $ req
+        & (lovKeyMarker       .~ (resp ^. lovrsNextKeyMarker))
+        & (lovVersionIdMarker .~ (resp ^. lovrsNextVersionIdMarker))
 
-s3ListObjectsC :: MonadIO m => ListObjectsV -> Source m Object
-s3ListObjectsC req = do
+s3ListObjectsC :: MonadIO m => Bool -> ListObjectsV -> Source m Object
+s3ListObjectsC recursive req = do
   resp <- liftIO $ sendAws req
   let startAfter            = resp ^. lrsStartAfter             -- StartAfter is where you want Amazon S3 to start listing from. Amazon S3 starts listing after this specified key. StartAfter can be any key in the bucket
   let keyCount              = resp ^. lrsKeyCount               -- KeyCount is the number of keys returned with this request. KeyCount will always be less than equals to MaxKeys field. Say you ask for 50 keys, your result will include less than equals 50 keys
@@ -57,12 +61,14 @@ s3ListObjectsC req = do
   let delimiter             = resp ^. lrsDelimiter              -- A delimiter is a character you use to group keys.
   let responseStatus        = resp ^. lrsResponseStatus         -- The response status code
 
-  forM_ (resp ^. lrsCommonPrefixes) $ \commonPrefix ->
-    s3ListObjectsC $ req
-      & (lPrefix  .~  (commonPrefix ^. cpPrefix))
+  when recursive $ do
+    forM_ (resp ^. lrsCommonPrefixes) $ \commonPrefix -> do
+      s3ListObjectsC recursive $ req
+        & (lPrefix  .~  (commonPrefix ^. cpPrefix))
 
   forM_ (resp ^. lrsContents ) yield
 
-  forM_ (resp ^. lrsIsTruncated) $ \isTruncated ->
-    when isTruncated $ s3ListObjectsC $ req
-      & (lContinuationToken       .~ (resp ^. lrsNextContinuationToken))
+  forM_ (resp ^. lrsIsTruncated) $ \isTruncated -> do
+    when isTruncated $ do
+      s3ListObjectsC recursive $ req
+        & (lContinuationToken       .~ (resp ^. lrsNextContinuationToken))

@@ -8,6 +8,7 @@ module Kuneiform.Option.Cmd.S3.Ls
   , s3LsBucket
   , s3LsDelimiter
   , s3LsPrefix
+  , s3LsRecursive
   , s3LsVersions
   ) where
 
@@ -25,6 +26,7 @@ data CmdS3Ls = CmdS3Ls
   , _s3LsPrefix    :: Maybe Text
   , _s3LsVersions  :: Bool
   , _s3LsDelimiter :: Maybe Char
+  , _s3LsRecursive :: Bool
   } deriving (Show, Eq)
 
 makeLenses ''CmdS3Ls
@@ -47,3 +49,6 @@ parserCmdS3Ls = CmdS3Ls
       ( charOption
         (   long "delimiter"
         <>  help "Enable version"))
+  <*> switch
+      (   long "recursive"
+      <>  help "Recursive")
