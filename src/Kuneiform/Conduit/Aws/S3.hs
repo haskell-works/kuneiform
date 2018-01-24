@@ -29,6 +29,10 @@ s3ListObjectVersionsC req = do
   let delimiter           = resp ^. lovrsDelimiter            -- Undocumented member.
   let responseStatus      = resp ^. lovrsResponseStatus       -- The response status code.
 
+  forM_ (resp ^. lovrsCommonPrefixes) $ \commonPrefix ->
+    s3ListObjectVersionsC $ req
+      & (lovPrefix  .~  (commonPrefix ^. cpPrefix))
+
   forM_ (resp ^. lovrsVersions ) yield
 
   forM_ (resp ^. lovrsIsTruncated) $ \isTruncated ->
@@ -52,6 +56,10 @@ s3ListObjectsC req = do
   let isTruncated           = resp ^. lrsIsTruncated            -- A flag that indicates whether or not Amazon S3 returned all of the results that satisfied the search criteria.
   let delimiter             = resp ^. lrsDelimiter              -- A delimiter is a character you use to group keys.
   let responseStatus        = resp ^. lrsResponseStatus         -- The response status code
+
+  forM_ (resp ^. lrsCommonPrefixes) $ \commonPrefix ->
+    s3ListObjectsC $ req
+      & (lPrefix  .~  (commonPrefix ^. cpPrefix))
 
   forM_ (resp ^. lrsContents ) yield
 
