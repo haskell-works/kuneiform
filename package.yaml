@@ -21,9 +21,8 @@ description:         Please see the README on Github at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- BoundedChan
 - aeson
-- async
-- async-pool
 - amazonka
 - amazonka-core
 - amazonka-dynamodb
@@ -32,6 +31,7 @@ dependencies:
 - amazonka-s3
 - amazonka-sns
 - amazonka-sqs
+- async
 - brick
 - bytestring
 - conduit

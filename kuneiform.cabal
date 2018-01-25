@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8e1c986629a029c94e194b3630385302b62fdc05bdee10e3e3c777a0effdcd48
+-- hash: 5405cfd1aef333c2702ce10cc9437fd262b066d67c447a77b9e865a973d4ec2f
 
 name:           kuneiform
 version:        0.1.0.0
@@ -29,7 +29,8 @@ library
   hs-source-dirs:
       src
   build-depends:
-      aeson
+      BoundedChan
+    , aeson
     , amazonka
     , amazonka-core
     , amazonka-dynamodb
@@ -99,7 +100,8 @@ executable kuneiform-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aeson
+      BoundedChan
+    , aeson
     , amazonka
     , amazonka-core
     , amazonka-dynamodb
@@ -138,7 +140,8 @@ test-suite kuneiform-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aeson
+      BoundedChan
+    , aeson
     , amazonka
     , amazonka-core
     , amazonka-dynamodb
