@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 879a9705d8862aa112d766e8863036e4cdef74429cb324e0c2fa24d3d8d648e4
+-- hash: 8e1c986629a029c94e194b3630385302b62fdc05bdee10e3e3c777a0effdcd48
 
 name:           kuneiform
 version:        0.1.0.0
@@ -29,7 +29,8 @@ library
   hs-source-dirs:
       src
   build-depends:
-      amazonka
+      aeson
+    , amazonka
     , amazonka-core
     , amazonka-dynamodb
     , amazonka-dynamodb-streams
@@ -37,6 +38,7 @@ library
     , amazonka-s3
     , amazonka-sns
     , amazonka-sqs
+    , async
     , base >=4.7 && <5
     , brick
     , bytestring
@@ -97,7 +99,8 @@ executable kuneiform-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      amazonka
+      aeson
+    , amazonka
     , amazonka-core
     , amazonka-dynamodb
     , amazonka-dynamodb-streams
@@ -105,6 +108,7 @@ executable kuneiform-exe
     , amazonka-s3
     , amazonka-sns
     , amazonka-sqs
+    , async
     , base >=4.7 && <5
     , brick
     , bytestring
@@ -134,7 +138,8 @@ test-suite kuneiform-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      amazonka
+      aeson
+    , amazonka
     , amazonka-core
     , amazonka-dynamodb
     , amazonka-dynamodb-streams
@@ -142,6 +147,7 @@ test-suite kuneiform-test
     , amazonka-s3
     , amazonka-sns
     , amazonka-sqs
+    , async
     , base >=4.7 && <5
     , brick
     , bytestring
