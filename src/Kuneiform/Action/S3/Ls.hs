@@ -21,14 +21,14 @@ actionS3Ls opts = do
 
   if opts ^. s3LsVersions
     then  let req = listObjectVersions (BucketName b)
-                  & (lovMaxKeys   .~ Just 10000)
+                  & (lovMaxKeys   .~ (opts ^. s3LsMaxKeys))
                   & (lovDelimiter .~ (opts ^. s3LsDelimiter))
                   & (lovPrefix    .~ (opts ^. s3LsPrefix))
           in runConduit $ s3ListObjectVersionsC r req
           .| effectC (\ov -> forM_ (ov ^. ovKey) print)
           .| sinkNull
     else  let req = listObjectsV (BucketName b)
-                  & (lMaxKeys     .~ Just 10000)
+                  & (lMaxKeys     .~ (opts ^. s3LsMaxKeys))
                   & (lDelimiter   .~ (opts ^. s3LsDelimiter))
                   & (lPrefix      .~ (opts ^. s3LsPrefix))
           in runConduit $ s3ListObjectsC r req

@@ -10,6 +10,7 @@ module Kuneiform.Option.Cmd.S3.Ls
   , s3LsPrefix
   , s3LsRecursive
   , s3LsVersions
+  , s3LsMaxKeys
   ) where
 
 import Control.Lens
@@ -27,6 +28,7 @@ data CmdS3Ls = CmdS3Ls
   , _s3LsVersions  :: Bool
   , _s3LsDelimiter :: Maybe Char
   , _s3LsRecursive :: Bool
+  , _s3LsMaxKeys   :: Maybe Int
   } deriving (Show, Eq)
 
 makeLenses ''CmdS3Ls
@@ -52,3 +54,7 @@ parserCmdS3Ls = CmdS3Ls
   <*> switch
       (   long "recursive"
       <>  help "Recursive")
+  <*> optional
+      ( readOption
+        (   long "max-keys"
+        <>  help "Maximum number of keys per request"))
