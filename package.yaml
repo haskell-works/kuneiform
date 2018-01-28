@@ -32,6 +32,7 @@ dependencies:
 - amazonka-sns
 - amazonka-sqs
 - async
+- async-pool
 - brick
 - bytestring
 - conduit

@@ -72,3 +72,23 @@ s3ListObjectsC recursive req = do
     when isTruncated $ do
       s3ListObjectsC recursive $ req
         & (lContinuationToken       .~ (resp ^. lrsNextContinuationToken))
+
+objectVersionToObjectIdentifier :: ObjectVersion -> [ObjectIdentifier]
+objectVersionToObjectIdentifier ov = case ov ^. ovKey of
+  Just k  ->  [ objectIdentifier k & (oiVersionId .~ (ov ^. ovVersionId))
+              ]
+  Nothing ->  []
+
+deleteObjectVersionsC :: MonadIO m => BucketName -> Conduit [ObjectVersion] m DeleteObjectsResponse
+deleteObjectVersionsC bucketName = do
+  movs <- await
+  case movs of
+    Just ovs -> do
+      let oids = ovs >>= objectVersionToObjectIdentifier
+          req = deleteObjects bucketName $ delete'
+              & dQuiet    .~ Just True
+              & dObjects  .~ oids
+      resp <- liftIO $ sendAws req
+      yield resp
+      deleteObjectVersionsC bucketName
+    Nothing -> return ()

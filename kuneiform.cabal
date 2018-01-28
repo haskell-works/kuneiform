@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 34422abe9e273d24c70bc5f22ea83ffea4894140c8fc9fb27d4d0af20fd503ee
+-- hash: 6797a95eef816804e587727885c0ef5d014de5091436aa8f16a667f1d4ac9381
 
 name:           kuneiform
 version:        0.1.0.0
@@ -40,6 +40,7 @@ library
     , amazonka-sns
     , amazonka-sqs
     , async
+    , async-pool
     , base >=4.7 && <5
     , brick
     , bytestring
@@ -112,6 +113,7 @@ executable kuneiform-exe
     , amazonka-sns
     , amazonka-sqs
     , async
+    , async-pool
     , base >=4.7 && <5
     , brick
     , bytestring
@@ -152,6 +154,7 @@ test-suite kuneiform-test
     , amazonka-sns
     , amazonka-sqs
     , async
+    , async-pool
     , base >=4.7 && <5
     , brick
     , bytestring
