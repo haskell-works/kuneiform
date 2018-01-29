@@ -48,6 +48,16 @@ jobs:
           name: Running unit tests
           command: stack test
 
+      - deploy:
+          command: |
+            if [ "$CIRCLE_PROJECT_USERNAME" == "haskell-works" ]; then
+              if [[ "$CIRCLE_BRANCH" == master ]]; then
+                when tag autotag
+              elif [[ "$CIRCLE_TAG" =~ v.* ]]; then
+                publish
+              fi
+            fi
+
 deployment:
   tagged_builds:
     tag: /v.*/
