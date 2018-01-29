@@ -11,7 +11,46 @@ import Data.Text              hiding (foldl1)
 import Kuneiform.Aws.Core
 import Network.AWS.S3
 
-{-# ANN module ("HLint: ignore Redundant do"  :: String) #-}
+{-# ANN module ("HLint: ignore Redundant do"        :: String) #-}
+{-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
+
+data S3Entry
+  = S3EntryOfObjectVersion ObjectVersion
+  | S3EntryOfDeleteMarker DeleteMarkerEntry
+  deriving (Eq, Show)
+
+s3ListObjectVersionsOrMarkersC :: MonadIO m => Bool -> ListObjectVersions -> Source m S3Entry
+s3ListObjectVersionsOrMarkersC recursive req = do
+  resp <- liftIO $ sendAws req
+  let nextVersionIdMarker = resp ^. lovrsNextVersionIdMarker  -- Use this value for the next version id marker parameter in a subsequent request.
+  let keyMarker           = resp ^. lovrsKeyMarker            -- Marks the last Key returned in a truncated response.
+  let deleteMarkers       = resp ^. lovrsDeleteMarkers        -- Undocumented member.
+  let prefix              = resp ^. lovrsPrefix               -- Undocumented member.
+  let commonPrefixes      = resp ^. lovrsCommonPrefixes       -- Undocumented member.
+  let encodingType        = resp ^. lovrsEncodingType         -- Encoding type used by Amazon S3 to encode object keys in the response.
+  let versions            = resp ^. lovrsVersions             -- Undocumented member.
+  let name                = resp ^. lovrsName                 -- Undocumented member.
+  let nextKeyMarker       = resp ^. lovrsNextKeyMarker        -- Use this value for the key marker request parameter in a subsequent request.
+  let versionIdMarker     = resp ^. lovrsVersionIdMarker      -- Undocumented member.
+  let maxKeys             = resp ^. lovrsMaxKeys              -- Undocumented member.
+  let isTruncated         = resp ^. lovrsIsTruncated          -- A flag that indicates whether or not Amazon S3 returned all of the results that satisfied the search criteria. If your results were truncated, you can make a follow-up paginated request using the NextKeyMarker and NextVersionIdMarker response parameters as a starting place in another request to return the rest of the results.
+  let delimiter           = resp ^. lovrsDelimiter            -- Undocumented member.
+  let responseStatus      = resp ^. lovrsResponseStatus       -- The response status code.
+
+  when recursive $ do
+    forM_ (resp ^. lovrsCommonPrefixes) $ \commonPrefix -> do
+      s3ListObjectVersionsOrMarkersC recursive $ req
+        & (lovPrefix  .~  (commonPrefix ^. cpPrefix))
+
+  forM_ (resp ^. lovrsVersions      ) (yield . S3EntryOfObjectVersion )
+  forM_ (resp ^. lovrsDeleteMarkers ) (yield . S3EntryOfDeleteMarker  )
+
+  forM_ (resp ^. lovrsIsTruncated) $ \isTruncated ->
+    when isTruncated $ do
+      s3ListObjectVersionsOrMarkersC recursive $ req
+        & (lovKeyMarker       .~ (resp ^. lovrsNextKeyMarker))
+        & (lovVersionIdMarker .~ (resp ^. lovrsNextVersionIdMarker))
+
 
 s3ListObjectVersionsC :: MonadIO m => Bool -> ListObjectVersions -> Source m ObjectVersion
 s3ListObjectVersionsC recursive req = do
@@ -76,6 +115,16 @@ s3ListObjectsC recursive req = do
 objectVersionToObjectIdentifier :: ObjectVersion -> [ObjectIdentifier]
 objectVersionToObjectIdentifier ov = case ov ^. ovKey of
   Just k  ->  [ objectIdentifier k & (oiVersionId .~ (ov ^. ovVersionId))
+              ]
+  Nothing ->  []
+
+s3EntryToObjectIdentifier :: S3Entry -> [ObjectIdentifier]
+s3EntryToObjectIdentifier (S3EntryOfObjectVersion ov) = case ov ^. ovKey of
+  Just k  ->  [ objectIdentifier k & (oiVersionId .~ (ov ^. ovVersionId))
+              ]
+  Nothing ->  []
+s3EntryToObjectIdentifier (S3EntryOfDeleteMarker ov) = case ov ^. dmeKey of
+  Just k  ->  [ objectIdentifier k & (oiVersionId .~ (ov ^. dmeVersionId))
               ]
   Nothing ->  []
 
