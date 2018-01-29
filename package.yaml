@@ -53,7 +53,7 @@ library:
   source-dirs: src
 
 executables:
-  kuneiform-exe:
+  kuneiform:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
