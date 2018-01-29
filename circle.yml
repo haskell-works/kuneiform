@@ -7,6 +7,14 @@ jobs:
 
     steps:
       - checkout
+
+      ##### Copying scripts
+      - run:
+          name: Copying scripts
+          command: |
+            mkdir -p ~/.local/bin
+            cp ./scripts/* ~/.local/bin
+
       - run: grep '^resolver:' stack.yaml > resolver.txt
 
       - restore_cache:
