@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/kuneiform
     docker:
-      - image: fpco/stack-build:latest
+      - image: quay.io/haskell_works/stack-build-cabal:2018-01-29
 
     steps:
       - checkout
@@ -11,25 +11,25 @@ jobs:
 
       - restore_cache:
           keys:
-            - dot-stack-{{ checksum "stack.yaml" }}-{{ checksum "kuneiform.cabal" }}
-            - dot-stack-{{ checksum "stack.yaml" }}
-            - dot-stack-{{ checksum "resolver.txt" }}
-            - dot-stack-resolver-{{ checksum "resolver.txt" }}
+            - emga7ct-dot-stack-{{ checksum "stack.yaml" }}-{{ checksum "kuneiform.cabal" }}
+            - emga7ct-dot-stack-{{ checksum "stack.yaml" }}
+            - emga7ct-dot-stack-{{ checksum "resolver.txt" }}
+            - emga7ct-dot-stack-resolver-{{ checksum "resolver.txt" }}
       - run: stack setup
       - save_cache:
-          key: dot-stack-resolver-{{ checksum "resolver.txt" }}
+          key: emga7ct-dot-stack-resolver-{{ checksum "resolver.txt" }}
           paths:
             - ~/.stack
       - save_cache:
-          key: dot-stack-setup-{{ checksum "stack.yaml" }}
+          key: emga7ct-dot-stack-setup-{{ checksum "stack.yaml" }}
           paths:
             - ~/.stack
 
       - run:
-          command: stack build --test --no-run-tests --dependencies-only
+          command: stack build --test --no-run-tests --dependencies-only -j4
           no_output_timeout: 1200
       - save_cache:
-          key: dot-stack-{{ checksum "resolver.txt" }}
+          key: emga7ct-dot-stack-{{ checksum "resolver.txt" }}
           paths:
             - ~/.stack
 
@@ -37,7 +37,7 @@ jobs:
           key: stack-work-{{ checksum "stack.yaml" }}
       - run: stack build --test --no-run-tests
       - save_cache:
-          key: dot-stack-{{ checksum "stack.yaml" }}-{{ checksum "kuneiform.cabal" }}
+          key: emga7ct-dot-stack-{{ checksum "stack.yaml" }}-{{ checksum "kuneiform.cabal" }}
           paths:
             - ~/.stack
       - save_cache:
