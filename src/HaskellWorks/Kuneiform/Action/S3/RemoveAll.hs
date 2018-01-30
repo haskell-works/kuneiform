@@ -11,6 +11,7 @@ import Control.Monad
 import Data.Monoid
 import HaskellWorks.Data.Conduit.Combinator
 import HaskellWorks.Kuneiform.Aws.Core
+import HaskellWorks.Kuneiform.Aws.S3
 import HaskellWorks.Kuneiform.Conduit.Aws.S3
 import HaskellWorks.Kuneiform.Conduit.BoundedChan
 import HaskellWorks.Kuneiform.Option.Cmd.S3.Ls

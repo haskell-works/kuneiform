@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 427ffb449d920ca687800034ce2683404d209a045e8f75b8e1e349e589a0097d
+-- hash: a3d6be30f20da0907dd5b8c2e5d28f89755cf5665b6f050187d6cf0f3fd77c3c
 
 name:           kuneiform
 version:        0.1.0.0
@@ -68,6 +68,7 @@ library
       HaskellWorks.Kuneiform.Action.Ui
       HaskellWorks.Kuneiform.Aws.Core
       HaskellWorks.Kuneiform.Aws.Kinesis
+      HaskellWorks.Kuneiform.Aws.S3
       HaskellWorks.Kuneiform.Conduit.Aws.Kinesis
       HaskellWorks.Kuneiform.Conduit.Aws.S3
       HaskellWorks.Kuneiform.Conduit.Aws.Sqs

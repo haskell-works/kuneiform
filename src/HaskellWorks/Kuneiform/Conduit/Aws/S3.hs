@@ -7,17 +7,13 @@ import Control.Monad
 import Control.Monad.IO.Class
 import Data.Conduit
 import Data.Monoid
-import Data.Text              hiding (foldl1)
+import Data.Text                       hiding (foldl1)
 import HaskellWorks.Kuneiform.Aws.Core
+import HaskellWorks.Kuneiform.Aws.S3
 import Network.AWS.S3
 
 {-# ANN module ("HLint: ignore Redundant do"        :: String) #-}
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
-
-data S3Entry
-  = S3EntryOfObjectVersion ObjectVersion
-  | S3EntryOfDeleteMarker DeleteMarkerEntry
-  deriving (Eq, Show)
 
 s3ListObjectVersionsOrMarkersC :: MonadIO m => Bool -> ListObjectVersions -> Source m S3Entry
 s3ListObjectVersionsOrMarkersC recursive req = do
@@ -50,7 +46,6 @@ s3ListObjectVersionsOrMarkersC recursive req = do
       s3ListObjectVersionsOrMarkersC recursive $ req
         & (lovKeyMarker       .~ (resp ^. lovrsNextKeyMarker))
         & (lovVersionIdMarker .~ (resp ^. lovrsNextVersionIdMarker))
-
 
 s3ListObjectVersionsC :: MonadIO m => Bool -> ListObjectVersions -> Source m ObjectVersion
 s3ListObjectVersionsC recursive req = do
@@ -111,22 +106,6 @@ s3ListObjectsC recursive req = do
     when isTruncated $ do
       s3ListObjectsC recursive $ req
         & (lContinuationToken       .~ (resp ^. lrsNextContinuationToken))
-
-objectVersionToObjectIdentifier :: ObjectVersion -> [ObjectIdentifier]
-objectVersionToObjectIdentifier ov = case ov ^. ovKey of
-  Just k  ->  [ objectIdentifier k & (oiVersionId .~ (ov ^. ovVersionId))
-              ]
-  Nothing ->  []
-
-s3EntryToObjectIdentifier :: S3Entry -> [ObjectIdentifier]
-s3EntryToObjectIdentifier (S3EntryOfObjectVersion ov) = case ov ^. ovKey of
-  Just k  ->  [ objectIdentifier k & (oiVersionId .~ (ov ^. ovVersionId))
-              ]
-  Nothing ->  []
-s3EntryToObjectIdentifier (S3EntryOfDeleteMarker ov) = case ov ^. dmeKey of
-  Just k  ->  [ objectIdentifier k & (oiVersionId .~ (ov ^. dmeVersionId))
-              ]
-  Nothing ->  []
 
 deleteObjectVersionsC :: MonadIO m => BucketName -> Conduit [ObjectVersion] m DeleteObjectsResponse
 deleteObjectVersionsC bucketName = do
