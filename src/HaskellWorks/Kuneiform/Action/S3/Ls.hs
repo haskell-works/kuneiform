@@ -7,11 +7,16 @@ import Control.Lens
 import Control.Monad
 import Data.Monoid
 import HaskellWorks.Data.Conduit.Combinator
+import HaskellWorks.Kuneiform.Aws.S3
 import HaskellWorks.Kuneiform.Conduit.Aws.S3
 import HaskellWorks.Kuneiform.Option.Cmd.S3.Ls
 import Network.AWS.S3.ListObjectsV
 import Network.AWS.S3.ListObjectVersions
 import Network.AWS.S3.Types
+
+printS3Entry :: S3Entry -> IO ()
+printS3Entry (S3EntryOfObjectVersion ov) = print $ ov  ^. ovKey
+printS3Entry (S3EntryOfDeleteMarker dme) = print $ show (dme ^. dmeKey) <> " (delete marker)"
 
 actionS3Ls :: CmdS3Ls -> IO ()
 actionS3Ls opts = do
@@ -24,8 +29,8 @@ actionS3Ls opts = do
                   & (lovMaxKeys   .~ (opts ^. s3LsMaxKeys))
                   & (lovDelimiter .~ (opts ^. s3LsDelimiter))
                   & (lovPrefix    .~ (opts ^. s3LsPrefix))
-          in runConduit $ s3ListObjectVersionsC r req
-          .| effectC (\ov -> forM_ (ov ^. ovKey) print)
+          in runConduit $ s3ListObjectVersionsOrMarkersC r req
+          .| effectC printS3Entry
           .| sinkNull
     else  let req = listObjectsV (BucketName b)
                   & (lMaxKeys     .~ (opts ^. s3LsMaxKeys))
