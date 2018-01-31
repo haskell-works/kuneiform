@@ -14,38 +14,41 @@ import Data.Kind
 import Data.Singletons
 import Data.Singletons.TH
 
-data DoorState = Opened | Closed | Locked
+data ResourceType
+  = RtS3Bucket
+  | RtSqs
+  | RtSns
   deriving (Show, Eq)
 
-genSingletons [''DoorState]
+genSingletons [''ResourceType]
 
-data Door :: DoorState -> Type where
+data Door :: ResourceType -> Type where
     UnsafeMkDoor :: { doorMaterial :: String } -> Door s
 
-closeDoor :: Door 'Opened -> Door 'Closed
+closeDoor :: Door 'RtS3Bucket -> Door 'RtSqs
 closeDoor (UnsafeMkDoor m) = UnsafeMkDoor m
 
-lockDoor :: Door 'Closed -> Door 'Locked
+lockDoor :: Door 'RtSqs -> Door 'RtSns
 lockDoor (UnsafeMkDoor m) = UnsafeMkDoor m
 
-openDoor :: Door 'Closed -> Door 'Opened
+openDoor :: Door 'RtSqs -> Door 'RtS3Bucket
 openDoor (UnsafeMkDoor m) = UnsafeMkDoor m
 
-doorStatus :: Sing s -> Door s -> DoorState
-doorStatus SOpened _ = Opened
-doorStatus SClosed _ = Closed
-doorStatus SLocked _ = Locked
+doorStatus :: Sing s -> Door s -> ResourceType
+doorStatus SRtS3Bucket _ = RtS3Bucket
+doorStatus SRtSqs _      = RtSqs
+doorStatus SRtSns _      = RtSns
 
-lockAnyDoor :: Sing s -> (Door s -> Door 'Locked)
+lockAnyDoor :: Sing s -> (Door s -> Door 'RtSns)
 lockAnyDoor = \case
-    SOpened -> lockDoor . closeDoor
-    SClosed -> lockDoor
-    SLocked -> id
+    SRtS3Bucket -> lockDoor . closeDoor
+    SRtSqs      -> lockDoor
+    SRtSns      -> id
 
-doorStatus_ :: SingI s => Door s -> DoorState
+doorStatus_ :: SingI s => Door s -> ResourceType
 doorStatus_ = doorStatus sing
 
-lockAnyDoor_ :: SingI s => Door s -> Door 'Locked
+lockAnyDoor_ :: SingI s => Door s -> Door 'RtSns
 lockAnyDoor_ = lockAnyDoor sing
 
 mkDoor :: Sing s -> String -> Door s
@@ -57,16 +60,16 @@ main = return ()
 
 -- Exercises
 
-unlockDoor :: Int -> Door 'Locked -> Maybe (Door 'Closed)
+unlockDoor :: Int -> Door 'RtSns -> Maybe (Door 'RtSqs)
 unlockDoor n (UnsafeMkDoor m)
     | n `mod` 2 == 1 = Just (UnsafeMkDoor m)
     | otherwise      = Nothing
 
-openAnyDoor :: SingI s => Int -> Door s -> Maybe (Door 'Opened)
+openAnyDoor :: SingI s => Int -> Door s -> Maybe (Door 'RtS3Bucket)
 openAnyDoor n = openAnyDoor_ sing
   where
-    openAnyDoor_ :: Sing s -> Door s -> Maybe (Door 'Opened)
+    openAnyDoor_ :: Sing s -> Door s -> Maybe (Door 'RtS3Bucket)
     openAnyDoor_ = \case
-      SOpened -> Just
-      SClosed -> Just . openDoor
-      SLocked -> fmap openDoor . unlockDoor n
+      SRtS3Bucket -> Just
+      SRtSqs      -> Just . openDoor
+      SRtSns      -> fmap openDoor . unlockDoor n
