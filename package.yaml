@@ -46,6 +46,8 @@ dependencies:
 - monad-logger
 - optparse-applicative
 - singletons
+- stm
+- stm-containers
 - text
 - vector
 - vty

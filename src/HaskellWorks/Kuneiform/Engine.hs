@@ -1,31 +1,61 @@
+{-# LANGUAGE TemplateHaskell #-}
 
 module HaskellWorks.Kuneiform.Engine where
 
-import qualified Data.Map as M
+import Control.Lens
+import System.IO.Unsafe
+
+import qualified Control.Concurrent.STM as S
+import qualified Data.Map               as M
 
 data ResS3Bucket = ResS3Bucket
-  { resS3BucketName       :: String
-  , resS3BucketActualName :: String
+  { _resS3BucketName       :: String
+  , _resS3BucketActualName :: String
   } deriving (Eq, Show)
+
+makeLenses ''ResS3Bucket
 
 data ResSqs = ResSqs
-  { resSqsName       :: String
-  , resSqsActualName :: String
+  { _resSqsName       :: String
+  , _resSqsActualName :: String
   } deriving (Eq, Show)
+
+makeLenses ''ResSqs
 
 data ResSns = ResSns
-  { resSnsName       :: String
-  , resSnsActualName :: String
+  { _resSnsName       :: String
+  , _resSnsActualName :: String
   } deriving (Eq, Show)
+
+makeLenses ''ResSns
 
 data ResSnsSubscription = ResSnsSubscription
-  { resSnsSubscriptionName       :: String
-  , resSnsSubscriptionActualName :: String
+  { _resSnsSubscriptionName       :: String
+  , _resSnsSubscriptionActualName :: String
   } deriving (Eq, Show)
 
+makeLenses ''ResSnsSubscription
+
 data ResourceTypes = ResourceTypes
-  { rtsS3Buckets       :: M.Map String ResS3Bucket
-  , rtsSqs             :: M.Map String ResSqs
-  , rtsSns             :: M.Map String ResSns
-  , rtsSnsSubscription :: M.Map String ResSnsSubscription
+  { _rtsS3Buckets       :: M.Map String ResS3Bucket
+  , _rtsSqs             :: M.Map String ResSqs
+  , _rtsSns             :: M.Map String ResSns
+  , _rtsSnsSubscription :: M.Map String ResSnsSubscription
   } deriving (Eq, Show)
+
+makeLenses ''ResourceTypes
+
+emptyResourceTypes :: ResourceTypes
+emptyResourceTypes = ResourceTypes
+  { _rtsS3Buckets        = M.empty
+  , _rtsSqs              = M.empty
+  , _rtsSns              = M.empty
+  , _rtsSnsSubscription  = M.empty
+  }
+
+resourceTypes :: S.TVar ResourceTypes
+resourceTypes = unsafePerformIO $ S.newTVarIO emptyResourceTypes
+{-# NOINLINE resourceTypes #-}
+
+declareBucket :: String -> IO ()
+declareBucket bucketName = S.atomically undefined

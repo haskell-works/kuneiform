@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d9e1bd374a8118ef2d491da1e5b7553b9c7f5319fc8905218b3750457c7df209
+-- hash: 99631799a275a8179f214db267891bdf9dca5da37b3c733deb0398fd42a7c7b0
 
 name:           kuneiform
 version:        0.1.0.0
@@ -55,6 +55,8 @@ library
     , monad-logger
     , optparse-applicative
     , singletons
+    , stm
+    , stm-containers
     , text
     , vector
     , vty
@@ -131,6 +133,8 @@ executable kuneiform
     , monad-logger
     , optparse-applicative
     , singletons
+    , stm
+    , stm-containers
     , text
     , vector
     , vty
@@ -173,6 +177,8 @@ test-suite kuneiform-test
     , monad-logger
     , optparse-applicative
     , singletons
+    , stm
+    , stm-containers
     , text
     , vector
     , vty
