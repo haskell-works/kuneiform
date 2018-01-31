@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a3d6be30f20da0907dd5b8c2e5d28f89755cf5665b6f050187d6cf0f3fd77c3c
+-- hash: d9e1bd374a8118ef2d491da1e5b7553b9c7f5319fc8905218b3750457c7df209
 
 name:           kuneiform
 version:        0.1.0.0
@@ -46,6 +46,7 @@ library
     , bytestring
     , conduit
     , conduit-combinators
+    , containers
     , fast-logger
     , http-client
     , hw-conduit
@@ -119,6 +120,7 @@ executable kuneiform
     , bytestring
     , conduit
     , conduit-combinators
+    , containers
     , fast-logger
     , gitrev
     , http-client
@@ -160,6 +162,7 @@ test-suite kuneiform-test
     , bytestring
     , conduit
     , conduit-combinators
+    , containers
     , fast-logger
     , hspec
     , http-client

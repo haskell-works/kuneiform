@@ -35,6 +35,7 @@ dependencies:
 - async-pool
 - brick
 - bytestring
+- containers
 - conduit
 - conduit-combinators
 - fast-logger
