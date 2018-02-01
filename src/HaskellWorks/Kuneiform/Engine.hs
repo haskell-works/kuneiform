@@ -8,6 +8,8 @@ import System.IO.Unsafe
 import qualified Control.Concurrent.STM as S
 import qualified Data.Map               as M
 
+{-# ANN module ("HLint: ignore Redundant do" :: String) #-}
+
 data ResS3Bucket = ResS3Bucket
   { _resS3BucketName       :: String
   , _resS3BucketActualName :: String
@@ -64,14 +66,26 @@ updateTVar ta f = do
   S.writeTVar ta newA
 
 declareBucket :: String -> IO ()
-declareBucket bucketName = S.atomically $ updateTVar gResourceTypes $ \resourceTypes ->
-  if bucketName `M.member` (resourceTypes ^. rtsS3Buckets)
-    then return resourceTypes
-    else return $ resourceTypes & rtsS3Buckets %~ M.insert bucketName newBucket
-  where newBucket = ResS3Bucket
-          { _resS3BucketName       = bucketName
-          , _resS3BucketActualName = bucketName
-          }
+declareBucket bucketName = S.atomically $ do
+  updateTVar gResourceTypes $ \resourceTypes ->
+    if bucketName `M.member` (resourceTypes ^. rtsS3Buckets)
+      then return resourceTypes
+      else return $ resourceTypes & rtsS3Buckets %~ M.insert bucketName newBucket
+    where newBucket = ResS3Bucket
+            { _resS3BucketName       = bucketName
+            , _resS3BucketActualName = bucketName
+            }
+
+undeclareBucket :: String -> IO ()
+undeclareBucket bucketName = S.atomically $ do
+  updateTVar gResourceTypes $ \resourceTypes ->
+    if bucketName `M.member` (resourceTypes ^. rtsS3Buckets)
+      then return $ resourceTypes & rtsS3Buckets %~ M.delete bucketName
+      else return resourceTypes
+    where newBucket = ResS3Bucket
+            { _resS3BucketName       = bucketName
+            , _resS3BucketActualName = bucketName
+            }
 
 declaredBuckets :: IO [String]
 declaredBuckets = do
