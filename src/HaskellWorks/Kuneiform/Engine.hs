@@ -53,9 +53,27 @@ emptyResourceTypes = ResourceTypes
   , _rtsSnsSubscription  = M.empty
   }
 
-resourceTypes :: S.TVar ResourceTypes
-resourceTypes = unsafePerformIO $ S.newTVarIO emptyResourceTypes
-{-# NOINLINE resourceTypes #-}
+gResourceTypes :: S.TVar ResourceTypes
+gResourceTypes = unsafePerformIO $ S.newTVarIO emptyResourceTypes
+{-# NOINLINE gResourceTypes #-}
+
+updateTVar :: S.TVar a -> (a -> S.STM a) -> S.STM ()
+updateTVar ta f = do
+  oldA <- S.readTVar ta
+  newA <- f oldA
+  S.writeTVar ta newA
 
 declareBucket :: String -> IO ()
-declareBucket bucketName = S.atomically undefined
+declareBucket bucketName = S.atomically $ updateTVar gResourceTypes $ \resourceTypes ->
+  if bucketName `M.member` (resourceTypes ^. rtsS3Buckets)
+    then return resourceTypes
+    else return $ resourceTypes & rtsS3Buckets %~ M.insert bucketName newBucket
+  where newBucket = ResS3Bucket
+          { _resS3BucketName       = bucketName
+          , _resS3BucketActualName = bucketName
+          }
+
+declaredBuckets :: IO [String]
+declaredBuckets = do
+  resourceTypes <- S.atomically $ S.readTVar gResourceTypes
+  return $ resourceTypes ^. rtsS3Buckets & M.keys
