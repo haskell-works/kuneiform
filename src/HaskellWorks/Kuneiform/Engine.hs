@@ -10,34 +10,6 @@ import qualified Data.Map               as M
 
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 
-data RwS3Bucket = RwS3Bucket
-  { _rwS3BucketName :: String
-  , _rwS3Versioning :: String
-  } deriving (Eq, Show)
-
-makeLenses ''RwS3Bucket
-
-data RwSqsQueue = RwSqsQueue
-  { _rwSqsQueueName :: String
-  , _rwSqsUnit      :: ()
-  } deriving (Eq, Show)
-
-makeLenses ''RwSqsQueue
-
-data RwSnsTopic = RwSnsTopic
-  { _rwSnsTopicName :: String
-  , _rwSnsTopicUnit :: ()
-  } deriving (Eq, Show)
-
-makeLenses ''RwSnsTopic
-
-data RwSnsSubscription = RwSnsSubscription
-  { _rwSnsSubscriptionName :: String
-  , _rwSnsSubscriptionUnit :: ()
-  } deriving (Eq, Show)
-
-makeLenses ''RwSnsSubscription
-
 data ResS3Bucket = ResS3Bucket
   { _resS3BucketName       :: String
   , _resS3BucketActualName :: String
@@ -74,15 +46,6 @@ data ResourceTypes = ResourceTypes
   } deriving (Eq, Show)
 
 makeLenses ''ResourceTypes
-
-data RealWorldTypes = RealWorldTypes
-  { _rwsS3Buckets       :: M.Map String RwS3Bucket
-  , _rwsSqs             :: M.Map String RwSqsQueue
-  , _rwsSns             :: M.Map String RwSnsTopic
-  , _rwsSnsSubscription :: M.Map String RwSnsSubscription
-  } deriving (Eq, Show)
-
-makeLenses ''RealWorldTypes
 
 emptyResourceTypes :: ResourceTypes
 emptyResourceTypes = ResourceTypes
