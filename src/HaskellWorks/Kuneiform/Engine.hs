@@ -10,6 +10,34 @@ import qualified Data.Map               as M
 
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 
+data RwS3Bucket = RwS3Bucket
+  { _rwS3BucketName :: String
+  , _rwS3Versioning :: String
+  } deriving (Eq, Show)
+
+makeLenses ''RwS3Bucket
+
+data RwSqsQueue = RwSqsQueue
+  { _rwSqsQueueName :: String
+  , _rwSqsUnit      :: ()
+  } deriving (Eq, Show)
+
+makeLenses ''RwSqsQueue
+
+data RwSnsTopic = RwSnsTopic
+  { _rwSnsTopicName :: String
+  , _rwSnsTopicUnit :: ()
+  } deriving (Eq, Show)
+
+makeLenses ''RwSnsTopic
+
+data RwSnsSubscription = RwSnsSubscription
+  { _rwSnsSubscriptionName :: String
+  , _rwSnsSubscriptionUnit :: ()
+  } deriving (Eq, Show)
+
+makeLenses ''RwSnsSubscription
+
 data ResS3Bucket = ResS3Bucket
   { _resS3BucketName       :: String
   , _resS3BucketActualName :: String
@@ -17,19 +45,19 @@ data ResS3Bucket = ResS3Bucket
 
 makeLenses ''ResS3Bucket
 
-data ResSqs = ResSqs
+data ResSqsQueue = ResSqsQueue
   { _resSqsName       :: String
   , _resSqsActualName :: String
   } deriving (Eq, Show)
 
-makeLenses ''ResSqs
+makeLenses ''ResSqsQueue
 
-data ResSns = ResSns
+data ResSnsTopic = ResSnsTopic
   { _resSnsName       :: String
   , _resSnsActualName :: String
   } deriving (Eq, Show)
 
-makeLenses ''ResSns
+makeLenses ''ResSnsTopic
 
 data ResSnsSubscription = ResSnsSubscription
   { _resSnsSubscriptionName       :: String
@@ -40,12 +68,21 @@ makeLenses ''ResSnsSubscription
 
 data ResourceTypes = ResourceTypes
   { _rtsS3Buckets       :: M.Map String ResS3Bucket
-  , _rtsSqs             :: M.Map String ResSqs
-  , _rtsSns             :: M.Map String ResSns
+  , _rtsSqs             :: M.Map String ResSqsQueue
+  , _rtsSns             :: M.Map String ResSnsTopic
   , _rtsSnsSubscription :: M.Map String ResSnsSubscription
   } deriving (Eq, Show)
 
 makeLenses ''ResourceTypes
+
+data RealWorldTypes = RealWorldTypes
+  { _rwsS3Buckets       :: M.Map String RwS3Bucket
+  , _rwsSqs             :: M.Map String RwSqsQueue
+  , _rwsSns             :: M.Map String RwSnsTopic
+  , _rwsSnsSubscription :: M.Map String RwSnsSubscription
+  } deriving (Eq, Show)
+
+makeLenses ''RealWorldTypes
 
 emptyResourceTypes :: ResourceTypes
 emptyResourceTypes = ResourceTypes
