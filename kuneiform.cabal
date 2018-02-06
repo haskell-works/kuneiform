@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 81994b121798fe159702547ddc3ebb4ce8a0d80d24a516ad4b1e48325bb8c8c4
+-- hash: 743ff15168e4933ff05296fbc827b6c78c209d47c0310213fdc0c692a04ea3e0
 
 name:           kuneiform
 version:        0.1.0.0
@@ -77,6 +77,11 @@ library
       HaskellWorks.Kuneiform.Conduit.Aws.Sqs
       HaskellWorks.Kuneiform.Conduit.BoundedChan
       HaskellWorks.Kuneiform.Engine
+      HaskellWorks.Kuneiform.Engine.Goal
+      HaskellWorks.Kuneiform.Engine.Goal.GoalS3Bucket
+      HaskellWorks.Kuneiform.Engine.Goal.GoalSnsSubscription
+      HaskellWorks.Kuneiform.Engine.Goal.GoalSnsTopic
+      HaskellWorks.Kuneiform.Engine.Goal.GoalSqsQueue
       HaskellWorks.Kuneiform.Engine.World
       HaskellWorks.Kuneiform.Engine.World.WorldS3Bucket
       HaskellWorks.Kuneiform.Engine.World.WorldSnsSubscription
