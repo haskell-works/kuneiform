@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0d47084433359fbe9daa8eff57173b639d7de2fa02b483f6bc728b3e78a59628
+-- hash: fd724be00501f3055264934efa9fe4f6fd3deb65544dfc6a27e4cbdfe5cb2c6d
 
 name:           kuneiform
 version:        0.1.0.0
@@ -47,6 +47,7 @@ library
     , conduit
     , conduit-combinators
     , containers
+    , dependent-sum
     , fast-logger
     , http-client
     , hw-conduit
@@ -134,6 +135,7 @@ executable kuneiform
     , conduit
     , conduit-combinators
     , containers
+    , dependent-sum
     , fast-logger
     , gitrev
     , http-client
@@ -151,6 +153,7 @@ executable kuneiform
     , vector
     , vty
   other-modules:
+      FrpMain
       Paths_kuneiform
   default-language: Haskell2010
 
@@ -179,6 +182,7 @@ test-suite kuneiform-test
     , conduit
     , conduit-combinators
     , containers
+    , dependent-sum
     , fast-logger
     , hspec
     , http-client

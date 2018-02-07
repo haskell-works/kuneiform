@@ -38,6 +38,7 @@ dependencies:
 - containers
 - conduit
 - conduit-combinators
+- dependent-sum
 - fast-logger
 - http-client
 - hw-conduit
