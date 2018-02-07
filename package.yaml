@@ -45,6 +45,7 @@ dependencies:
 - microlens
 - monad-logger
 - optparse-applicative
+- reflex
 - singletons
 - stm
 - stm-containers

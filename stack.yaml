@@ -37,11 +37,17 @@ resolver: lts-10.4
 # will not be run. This is useful for tweaking upstream packages.
 packages:
 - '.'
+- location:
+   git: https://github.com/newhoggy/reflex.git
+   commit: e360ecce296c30e58f88ae1afe40643802d8aec6
+  extra-dep: true
+
 # Dependency packages to be pulled from upstream that are not in the resolver
 # (e.g., acme-missiles-0.3)
 
 extra-deps:
 - async-pool-0.9.0.2
+- prim-uniq-0.1.0.1
 
 # Override default flag values for local packages and extra-deps
 flags: {}

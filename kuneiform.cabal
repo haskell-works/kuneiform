@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 743ff15168e4933ff05296fbc827b6c78c209d47c0310213fdc0c692a04ea3e0
+-- hash: 0d47084433359fbe9daa8eff57173b639d7de2fa02b483f6bc728b3e78a59628
 
 name:           kuneiform
 version:        0.1.0.0
@@ -54,6 +54,7 @@ library
     , microlens
     , monad-logger
     , optparse-applicative
+    , reflex
     , singletons
     , stm
     , stm-containers
@@ -142,6 +143,7 @@ executable kuneiform
     , microlens
     , monad-logger
     , optparse-applicative
+    , reflex
     , singletons
     , stm
     , stm-containers
@@ -186,6 +188,7 @@ test-suite kuneiform-test
     , microlens
     , monad-logger
     , optparse-applicative
+    , reflex
     , singletons
     , stm
     , stm-containers
