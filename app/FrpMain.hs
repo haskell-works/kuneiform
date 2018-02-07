@@ -47,11 +47,7 @@ type TypingApp t m = (Reflex t, MonadHold t m, MonadFix m)
 -- | Run a program written in the framework.  This will do all the necessary
 --   work to integrate the Reflex-based guest program with the outside world
 --   via IO.
-host :: (forall t m. TypingApp t m)
-        -- ^ By keeping t and m abstract, we ensure that the user (the
-        --   programmer using our framework) can't make any assumptions
-        --   about which Reflex implementation is being used
-     -> IO ()
+host :: (forall t m. TypingApp t m) -> IO ()
 host myGuest = do
 
   -- Use the Spider implementation of Reflex.
