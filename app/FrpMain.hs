@@ -1,5 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE RankNTypes            #-}
+{-# LANGUAGE RecursiveDo           #-}
 
 module FrpMain where
 
@@ -41,7 +42,7 @@ host myGuest = runSpiderHost $ do
     liftIO $ putStrLn $ "Output Behavior: " ++ show output
 
 guest :: TypingApp t m
-guest e = do
+guest e = mdo
   d <- foldDyn (:) [] e
 
   return $ reverse <$> current d
