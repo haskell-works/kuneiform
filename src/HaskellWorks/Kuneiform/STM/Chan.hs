@@ -1,8 +1,9 @@
 module HaskellWorks.Kuneiform.STM.Chan where
 
 import Control.Concurrent.STM
-import Control.Concurrent.STM.TChan
 import Control.Monad
+
+import Prelude hiding (maxBound)
 
 data Chan a = Chan
   { chanChan     :: TChan a

@@ -2,13 +2,7 @@ module HaskellWorks.Kuneiform.Conduit.Chan where
 
 import Conduit
 import Control.Concurrent.STM
-import Control.Lens
-import Control.Monad
-import Data.Text
-import HaskellWorks.Kuneiform.Aws.Core
-import HaskellWorks.Kuneiform.Envelope
 import HaskellWorks.Kuneiform.STM.Chan
-import Network.AWS.SQS
 
 chanSource :: MonadIO m => Chan (Maybe a) -> Source m a
 chanSource c = do

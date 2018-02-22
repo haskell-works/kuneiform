@@ -1,9 +1,9 @@
+{-# LANGUAGE LambdaCase    #-}
 {-# LANGUAGE TupleSections #-}
 
 module HaskellWorks.Kuneiform.Action.S3.RemoveAll where
 
 import Conduit
-import Control.Arrow
 import Control.Concurrent.Async
 import Control.Concurrent.STM
 import Control.Lens
@@ -14,13 +14,9 @@ import HaskellWorks.Kuneiform.Aws.Core
 import HaskellWorks.Kuneiform.Aws.S3
 import HaskellWorks.Kuneiform.Conduit.Aws.S3
 import HaskellWorks.Kuneiform.Conduit.Chan
-import HaskellWorks.Kuneiform.Option.Cmd.S3.Ls
 import HaskellWorks.Kuneiform.Option.Cmd.S3.RemoveAll
 import HaskellWorks.Kuneiform.STM.Chan
 import Network.AWS.S3
-import Network.AWS.S3.ListObjectsV
-import Network.AWS.S3.ListObjectVersions
-import Network.AWS.S3.Types
 
 import qualified Data.Conduit.List as CL
 
@@ -42,14 +38,13 @@ performDeleteObjectVersions bucketName ovs = do
 
 logDeletedS3EntryResult :: ([S3Entry], a) -> IO ()
 logDeletedS3EntryResult (es, _) =
-  forM_ es $ \e -> case e of
+  forM_ es $ \case
     S3EntryOfObjectVersion ov -> putStrLn $ "Deleted object version: " <> show (ov ^. ovKey)
     S3EntryOfDeleteMarker dme -> putStrLn $ "Deleted delete marker: " <> show (dme ^. dmeKey)
 
 actionS3RemoveAll :: CmdS3RemoveAll -> IO ()
 actionS3RemoveAll opts = do
   let b = opts ^. s3RemoveAllBucket
-  let p = opts ^. s3RemoveAllPrefix
   let r = opts ^. s3RemoveAllRecursive
 
   if opts ^. s3RemoveAllVersions
@@ -60,22 +55,22 @@ actionS3RemoveAll opts = do
               & (lovMaxKeys   .~ (opts ^. s3RemoveAllMaxKeys))
               & (lovDelimiter .~ (opts ^. s3RemoveAllDelimiter))
               & (lovPrefix    .~ (opts ^. s3RemoveAllPrefix))
-      let listObjectVersions = runConduit $ s3ListObjectVersionsOrMarkersC r req
+      let doListObjectVersions = runConduit $ s3ListObjectVersionsOrMarkersC r req
               .| chanSink objectVersionChan
-      let processObjectVersions = runConduit $ chanSource objectVersionChan
+      let doProcessObjectVersions = runConduit $ chanSource objectVersionChan
               -- .| effectC (\s3e -> case s3e of
               --   S3EntryOfObjectVersion ov -> forM_ (ov ^. ovKey) (\k -> putStrLn $ "Deleting object: " <> show k)
               --   S3EntryOfDeleteMarker dme -> forM_ (dme ^. dmeKey) (\k -> putStrLn $ "Deleting delete marker: " <> show k))
               .| CL.chunksOf 100
               .| CL.mapM (\entry -> (entry, ) <$> async (performDeleteS3Entry (BucketName b) entry))
               .| chanSink completionChan
-      let waitComplete = runConduit $ chanSource completionChan
-              .| mapMC (\(e, d) -> wait d >>= (\r -> return (e, r)))
+      let doWaitComplete = runConduit $ chanSource completionChan
+              .| mapMC (\(e, d) -> wait d >>= (return . (e, )))
               .| effectC (logDeleteObjectsResponse . snd)
               .| sinkNull
-      withAsync listObjectVersions $ \a1 ->
-        withAsync processObjectVersions $ \a2 ->
-          withAsync waitComplete $ \a3 -> do
+      withAsync doListObjectVersions $ \a1 ->
+        withAsync doProcessObjectVersions $ \a2 ->
+          withAsync doWaitComplete $ \a3 -> do
             _ <- wait a1
             _ <- wait a2
             _ <- wait a3
@@ -86,18 +81,18 @@ actionS3RemoveAll opts = do
               & (lMaxKeys     .~ (opts ^. s3RemoveAllMaxKeys))
               & (lDelimiter   .~ (opts ^. s3RemoveAllDelimiter))
               & (lPrefix      .~ (opts ^. s3RemoveAllPrefix))
-      let listObjects = do
+      let doListObjects = do
             putStrLn "Listing"
             runConduit $ s3ListObjectsC r req
               .| effectC (\ov -> putStrLn $ "List: " <> show (ov ^. oKey))
               .| chanSink objectChan
-      let processObjects = do
+      let doProcessObjects = do
             putStrLn "Processing"
             runConduit $ chanSource objectChan
               .| effectC (\ov -> putStrLn $ "Process: " <> show (ov ^. oKey))
               .| sinkNull
-      withAsync listObjects $ \b1 ->
-        withAsync processObjects $ \b2 -> do
+      withAsync doListObjects $ \b1 ->
+        withAsync doProcessObjects $ \b2 -> do
           _ <- wait b1
           _ <- wait b2
           return ()

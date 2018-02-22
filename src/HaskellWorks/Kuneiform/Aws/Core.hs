@@ -3,12 +3,10 @@ module HaskellWorks.Kuneiform.Aws.Core
   ) where
 
 import Control.Lens
-import Control.Monad
 import Control.Monad.IO.Class
-import Control.Monad.Trans.AWS hiding (await)
+import Control.Monad.Trans.AWS
 import Data.ByteString.Builder
 import Network.HTTP.Client     (HttpException (..), HttpExceptionContent (..))
-import System.IO
 
 import qualified Data.ByteString       as BS
 import qualified Data.ByteString.Char8 as C8

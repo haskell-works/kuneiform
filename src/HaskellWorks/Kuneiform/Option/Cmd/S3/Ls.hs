@@ -19,8 +19,6 @@ import Data.Text
 import HaskellWorks.Kuneiform.Option.Parse
 import HaskellWorks.Kuneiform.Optparse.Combinator
 import Options.Applicative
-import Options.Applicative.Builder
-import Text.Read
 
 data CmdS3Ls = CmdS3Ls
   { _s3LsBucket    :: Text

@@ -1,11 +1,7 @@
 module HaskellWorks.Kuneiform.Optparse.Combinator where
 
-import Control.Lens
 import Data.Monoid
-import Data.Text
-import HaskellWorks.Kuneiform.Option.Parse
 import Options.Applicative
-import Options.Applicative.Builder
 import Text.Read
 
 readOption :: Read a => Mod OptionFields a -> Parser a

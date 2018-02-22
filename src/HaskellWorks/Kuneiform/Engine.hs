@@ -37,10 +37,6 @@ undeclareBucket bucketName = S.atomically $ do
     if bucketName `M.member` (resourceTypes ^. goalS3Buckets)
       then return $ resourceTypes & goalS3Buckets %~ M.delete bucketName
       else return resourceTypes
-    where newBucket = GoalS3Bucket
-            { _goalS3BucketName       = bucketName
-            , _goalS3BucketActualName = bucketName
-            }
 
 declaredBuckets :: IO [String]
 declaredBuckets = do

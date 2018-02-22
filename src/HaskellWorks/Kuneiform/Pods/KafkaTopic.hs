@@ -16,7 +16,7 @@ newtype KafkaTopicIn = KafkaTopicIn
   } deriving (Eq, Show)
 
 newPodKafkaTopic :: PodIn KafkaTopic -> IO KafkaTopic
-newPodKafkaTopic i = do
+newPodKafkaTopic _ = do
   return KafkaTopic
     { kafkaTopicName  = "hello"
     , kafkaPartitions = 3

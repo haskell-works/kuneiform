@@ -5,6 +5,9 @@
 module HaskellWorks.Kuneiform.Option.Cmd.S3
   ( CmdS3Of(..)
   , parserCmdS3
+  , cmdS3OfHelp
+  , cmdS3OfLs
+  , cmdS3OfRemoveAll
   ) where
 
 import Control.Lens

@@ -4,7 +4,6 @@ module HaskellWorks.Kuneiform.Action.S3.Ls where
 
 import Conduit
 import Control.Lens
-import Control.Monad
 import Data.Monoid
 import HaskellWorks.Data.Conduit.Combinator
 import HaskellWorks.Kuneiform.Aws.S3
@@ -21,7 +20,6 @@ printS3Entry (S3EntryOfDeleteMarker dme) = print $ show (dme ^. dmeKey) <> " (de
 actionS3Ls :: CmdS3Ls -> IO ()
 actionS3Ls opts = do
   let b = opts ^. s3LsBucket
-  let p = opts ^. s3LsPrefix
   let r = opts ^. s3LsRecursive
 
   if opts ^. s3LsVersions

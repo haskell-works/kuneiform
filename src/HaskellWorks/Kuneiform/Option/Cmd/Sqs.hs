@@ -5,6 +5,8 @@
 module HaskellWorks.Kuneiform.Option.Cmd.Sqs
   ( CmdSqsOf(..)
   , parserCmdSqs
+  , cmdSqsOfHelp
+  , cmdSqsOfToKinesis
   ) where
 
 import Control.Lens

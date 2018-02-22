@@ -4,7 +4,6 @@
 
 module FrpMain where
 
-import Control.Concurrent     (forkIO)
 import Control.Monad          (forever)
 import Control.Monad.Fix      (MonadFix)
 import Control.Monad.IO.Class (liftIO)
