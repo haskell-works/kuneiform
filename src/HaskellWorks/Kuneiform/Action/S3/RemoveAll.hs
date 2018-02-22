@@ -27,7 +27,7 @@ performDeleteS3Entry :: BucketName -> [S3Entry] -> IO DeleteObjectsResponse
 performDeleteS3Entry bucketName ovs = do
   let oids = ovs >>= s3EntryToObjectIdentifier
       req = deleteObjects bucketName $ delete'
-          & dQuiet    .~ Just True
+          & dQuiet    .~ Just False
           & dObjects  .~ oids
   liftIO $ sendAws req
 
@@ -35,11 +35,11 @@ performDeleteObjectVersions :: BucketName -> [ObjectVersion] -> IO DeleteObjects
 performDeleteObjectVersions bucketName ovs = do
   let oids = ovs >>= objectVersionToObjectIdentifier
       req = deleteObjects bucketName $ delete'
-          & dQuiet    .~ Just True
+          & dQuiet    .~ Just False
           & dObjects  .~ oids
   liftIO $ sendAws req
 
-logDeletedS3EntryResult :: ([S3Entry], DeleteObjectsResponse) -> IO ()
+logDeletedS3EntryResult :: ([S3Entry], a) -> IO ()
 logDeletedS3EntryResult (es, _) =
   forM_ es $ \e -> case e of
     S3EntryOfObjectVersion ov -> putStrLn $ "Deleted object version: " <> show (ov ^. ovKey)
@@ -62,15 +62,15 @@ actionS3RemoveAll opts = do
       let listObjectVersions = runConduit $ s3ListObjectVersionsOrMarkersC r req
               .| boundedChanSink objectVersionChan
       let processObjectVersions = runConduit $ boundedChanSource objectVersionChan
-              -- .| effectC (\ov -> forM_ (ov ^. ovKey) (\k -> putStrLn $ "Process: " <> show k))
-              .| CL.chunksOf 1000
+              -- .| effectC (\s3e -> case s3e of
+              --   S3EntryOfObjectVersion ov -> forM_ (ov ^. ovKey) (\k -> putStrLn $ "Deleting object: " <> show k)
+              --   S3EntryOfDeleteMarker dme -> forM_ (dme ^. dmeKey) (\k -> putStrLn $ "Deleting delete marker: " <> show k))
+              .| CL.chunksOf 100
               .| CL.mapM (\entry -> (entry, ) <$> async (performDeleteS3Entry (BucketName b) entry))
               .| boundedChanSink completionChan
       let waitComplete = runConduit $ boundedChanSource completionChan
-              .| CL.mapM (\(e, d) -> wait d >>= (\r -> return (e, r)))
+              .| mapMC (\(e, d) -> wait d >>= (\r -> return (e, r)))
               .| effectC (logDeleteObjectsResponse . snd)
-              -- .| effectC (\dor -> putStrLn "==== Deleted chunk ====")
-              -- .| effectC (\es -> forM_ es logDeletedS3Entry)
               .| sinkNull
       withAsync listObjectVersions $ \a1 ->
         withAsync processObjectVersions $ \a2 ->
