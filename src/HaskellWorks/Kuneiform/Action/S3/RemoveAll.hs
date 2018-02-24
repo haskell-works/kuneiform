@@ -5,7 +5,7 @@ module HaskellWorks.Kuneiform.Action.S3.RemoveAll where
 import Conduit
 import Control.Arrow
 import Control.Concurrent.Async
-import Control.Concurrent.BoundedChan
+import Control.Concurrent.STM
 import Control.Lens
 import Control.Monad
 import Data.Monoid
@@ -13,9 +13,10 @@ import HaskellWorks.Data.Conduit.Combinator
 import HaskellWorks.Kuneiform.Aws.Core
 import HaskellWorks.Kuneiform.Aws.S3
 import HaskellWorks.Kuneiform.Conduit.Aws.S3
-import HaskellWorks.Kuneiform.Conduit.BoundedChan
+import HaskellWorks.Kuneiform.Conduit.Chan
 import HaskellWorks.Kuneiform.Option.Cmd.S3.Ls
 import HaskellWorks.Kuneiform.Option.Cmd.S3.RemoveAll
+import HaskellWorks.Kuneiform.STM.Chan
 import Network.AWS.S3
 import Network.AWS.S3.ListObjectsV
 import Network.AWS.S3.ListObjectVersions
@@ -53,22 +54,22 @@ actionS3RemoveAll opts = do
 
   if opts ^. s3RemoveAllVersions
     then do
-      objectVersionChan <- newBoundedChan 20000
-      completionChan <- newBoundedChan 100
+      objectVersionChan <- atomically $ newChan 20000
+      completionChan <- atomically $ newChan 100
       let req = listObjectVersions (BucketName b)
               & (lovMaxKeys   .~ (opts ^. s3RemoveAllMaxKeys))
               & (lovDelimiter .~ (opts ^. s3RemoveAllDelimiter))
               & (lovPrefix    .~ (opts ^. s3RemoveAllPrefix))
       let listObjectVersions = runConduit $ s3ListObjectVersionsOrMarkersC r req
-              .| boundedChanSink objectVersionChan
-      let processObjectVersions = runConduit $ boundedChanSource objectVersionChan
+              .| chanSink objectVersionChan
+      let processObjectVersions = runConduit $ chanSource objectVersionChan
               -- .| effectC (\s3e -> case s3e of
               --   S3EntryOfObjectVersion ov -> forM_ (ov ^. ovKey) (\k -> putStrLn $ "Deleting object: " <> show k)
               --   S3EntryOfDeleteMarker dme -> forM_ (dme ^. dmeKey) (\k -> putStrLn $ "Deleting delete marker: " <> show k))
               .| CL.chunksOf 100
               .| CL.mapM (\entry -> (entry, ) <$> async (performDeleteS3Entry (BucketName b) entry))
-              .| boundedChanSink completionChan
-      let waitComplete = runConduit $ boundedChanSource completionChan
+              .| chanSink completionChan
+      let waitComplete = runConduit $ chanSource completionChan
               .| mapMC (\(e, d) -> wait d >>= (\r -> return (e, r)))
               .| effectC (logDeleteObjectsResponse . snd)
               .| sinkNull
@@ -80,7 +81,7 @@ actionS3RemoveAll opts = do
             _ <- wait a3
             return ()
     else do
-      objectChan <- newBoundedChan 1000
+      objectChan <- atomically $ newChan 1000
       let req = listObjectsV (BucketName b)
               & (lMaxKeys     .~ (opts ^. s3RemoveAllMaxKeys))
               & (lDelimiter   .~ (opts ^. s3RemoveAllDelimiter))
@@ -89,10 +90,10 @@ actionS3RemoveAll opts = do
             putStrLn "Listing"
             runConduit $ s3ListObjectsC r req
               .| effectC (\ov -> putStrLn $ "List: " <> show (ov ^. oKey))
-              .| boundedChanSink objectChan
+              .| chanSink objectChan
       let processObjects = do
             putStrLn "Processing"
-            runConduit $ boundedChanSource objectChan
+            runConduit $ chanSource objectChan
               .| effectC (\ov -> putStrLn $ "Process: " <> show (ov ^. oKey))
               .| sinkNull
       withAsync listObjects $ \b1 ->
