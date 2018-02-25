@@ -40,6 +40,7 @@ dependencies:
 - conduit-combinators
 - dependent-sum
 - fast-logger
+- hourglass
 - http-client
 - hw-conduit
 - lens
@@ -89,4 +90,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - kuneiform
+    - hedgehog
     - hspec
+    - hw-hedgehog
+    - hw-hspec-hedgehog

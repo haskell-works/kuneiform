@@ -53,7 +53,7 @@ tryPeekChan c = tryPeekTChan (chanChan c)
 writeChan :: Chan a -> a -> STM ()
 writeChan c a = do
   s <- readTVar (chanSize c)
-  if s > chanMaxBound c
+  if s >= chanMaxBound c
     then retry
     else do
       modifyTVar (chanSize c) (+1)
