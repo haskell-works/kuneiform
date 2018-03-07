@@ -12,20 +12,36 @@ import Test.Hspec
 import Time.System
 
 {-# ANN module ("HLint: ignore Redundant do"  :: String) #-}
+{-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
 
 spec :: Spec
 spec = describe "HaskellWorks.Kuneiform.STM.ChanSpec" $ do
   it "A full channel cannot be written to" $ do
     require $ withTests 1 $ property $ do
       c <- liftIO $ atomically $ newChan 2
-      tc1 <- liftIO $ timeCurrent
+      tc1 <- liftIO timeCurrent
       void $ liftIO $ forkIO $ do
         threadDelay 2000000
         void $ atomically $ readChan c
       liftIO $ atomically $ writeChan c 'a'
       liftIO $ atomically $ writeChan c 'b'
-      tc2 <- liftIO $ timeCurrent
+      tc2 <- liftIO timeCurrent
       liftIO $ atomically $ writeChan c 'c'
-      tc3 <- liftIO $ timeCurrent
+      tc3 <- liftIO timeCurrent
       timeDiff tc2 tc1 === 0
       timeDiff tc3 tc1 === 2
+  it "A full channel cannot be written to" $ do
+    require $ withTests 1 $ property $ do
+      c <- liftIO $ atomically $ newChan 2
+      tc1 <- liftIO timeCurrent
+      void $ liftIO $ forkIO $ do
+        threadDelay 2000000
+        void $ atomically $ readChan c
+      liftIO $ atomically $ writeChan c 'a'
+      liftIO $ atomically $ writeChan c 'b'
+      tc2 <- liftIO timeCurrent
+      liftIO $ atomically $ writeChan c 'c'
+      tc3 <- liftIO timeCurrent
+      timeDiff tc2 tc1 === 0
+      timeDiff tc3 tc1 === 2
+
