@@ -1,6 +1,6 @@
 name:                kuneiform
 version:             0.1.0.1
-github:              "githubuser/kuneiform"
+github:              "haskell-works/kuneiform"
 license:             BSD3
 author:              "John Ky"
 maintainer:          "newhoggy@gmail.com"
