@@ -31,7 +31,6 @@ dependencies:
 - amazonka-sns
 - amazonka-sqs
 - async
-- async-pool
 - base-prelude
 - brick
 - bytestring
@@ -47,7 +46,6 @@ dependencies:
 - microlens
 - monad-logger
 - optparse-applicative
-- reflex
 - singletons
 - stm
 - stm-containers

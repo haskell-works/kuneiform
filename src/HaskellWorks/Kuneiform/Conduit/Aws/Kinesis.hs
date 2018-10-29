@@ -3,12 +3,12 @@ module HaskellWorks.Kuneiform.Conduit.Aws.Kinesis where
 import Control.Monad
 import Control.Monad.IO.Class
 import Data.Conduit
-import Data.Text              hiding (foldl1)
+import Data.Text                          hiding (foldl1)
 import HaskellWorks.Kuneiform.Aws.Core
 import HaskellWorks.Kuneiform.Aws.Kinesis
 import Network.AWS.Kinesis
 
-kinesisPutC :: (Foldable f, Functor f, MonadIO m, ToKinesisRecord k) => Text -> Conduit (f k) m (f PutRecordResponse)
+kinesisPutC :: (Foldable f, Functor f, MonadIO m, ToKinesisRecord k) => Text -> ConduitT (f k) (f PutRecordResponse) m ()
 kinesisPutC streamName = do
   ma <- await
   case ma of

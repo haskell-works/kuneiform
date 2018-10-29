@@ -18,7 +18,9 @@ import HaskellWorks.Kuneiform.Option.Cmd.S3.RemoveAll
 import HaskellWorks.Kuneiform.STM.Chan
 import Network.AWS.S3
 
-import qualified Data.Conduit.List as CL
+import qualified Data.Conduit.List                 as CL
+import qualified Network.AWS.S3.ListObjectsV2      as LO2
+import qualified Network.AWS.S3.ListObjectVersions as LOV
 
 performDeleteS3Entry :: BucketName -> [S3Entry] -> IO DeleteObjectsResponse
 performDeleteS3Entry bucketName ovs = do
@@ -52,9 +54,9 @@ actionS3RemoveAll opts = do
       objectVersionChan <- atomically $ newChan 20000
       completionChan <- atomically $ newChan 100
       let req = listObjectVersions (BucketName b)
-              & (lovMaxKeys   .~ (opts ^. s3RemoveAllMaxKeys))
-              & (lovDelimiter .~ (opts ^. s3RemoveAllDelimiter))
-              & (lovPrefix    .~ (opts ^. s3RemoveAllPrefix))
+              & (LOV.lMaxKeys   .~ (opts ^. s3RemoveAllMaxKeys))
+              & (LOV.lDelimiter .~ (opts ^. s3RemoveAllDelimiter))
+              & (LOV.lPrefix    .~ (opts ^. s3RemoveAllPrefix))
       let doListObjectVersions = runConduit $ s3ListObjectVersionsOrMarkersC r req
               .| chanSink objectVersionChan
       let doProcessObjectVersions = runConduit $ chanSource objectVersionChan
@@ -77,10 +79,10 @@ actionS3RemoveAll opts = do
             return ()
     else do
       objectChan <- atomically $ newChan 1000
-      let req = listObjectsV (BucketName b)
-              & (lMaxKeys     .~ (opts ^. s3RemoveAllMaxKeys))
-              & (lDelimiter   .~ (opts ^. s3RemoveAllDelimiter))
-              & (lPrefix      .~ (opts ^. s3RemoveAllPrefix))
+      let req = LO2.listObjectsV2 (BucketName b)
+              & (LO2.lovMaxKeys     .~ (opts ^. s3RemoveAllMaxKeys))
+              & (LO2.lovDelimiter   .~ (opts ^. s3RemoveAllDelimiter))
+              & (LO2.lovPrefix      .~ (opts ^. s3RemoveAllPrefix))
       let doListObjects = do
             putStrLn "Listing"
             runConduit $ s3ListObjectsC r req
