@@ -12,3 +12,9 @@ extra-deps:
     commit: 248f7b2a7248222cc21cef6194cd1872ba99ac5d
     subdirs:
       - amazonka
+
+extra-deps:
+  - git: git@github.com:haskell-works/amazonka
+    commit: c8e7095a7fcd02a8fcebb4de37254b87312cbcf7
+    subdirs:
+      - amazonka-s3

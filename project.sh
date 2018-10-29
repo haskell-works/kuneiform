@@ -19,6 +19,12 @@ case $1 in
       $STACK_FLAGS
     ;;
 
+  install)
+    stack install \
+      --test --no-run-tests --bench --no-run-benchmarks \
+      $STACK_FLAGS
+    ;;
+
   repl)
     stack repl \
       $STACK_FLAGS
